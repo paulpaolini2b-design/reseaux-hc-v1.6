@@ -745,3 +745,9 @@ Essais v1.5.4 : `node js/v151.test.mjs` (16 essais, dont couverture des tuiles, 
 | H-322 | **Titre** « PLAN DE SITUATION » au-dessus du cadre, centré, gras, 3,2 mm, solidaire (déplacement, rotation ; taille papier fixe) ; texte et case « Afficher le titre » dans la fiche ; titre vide = aucun titre. Cartes posées en v1.5.4 : titre **masqué** par la migration (aucun changement d'aspect à l'ouverture) ; l'indication d'échelle, elle, apparaît. | `symboles.js`, `modele.js`, `ui/fiche-objet.js` |
 
 Essais v1.6.0 : `node js/v160.test.mjs` (15 essais : segments gras, mentions, ligne manuelle, marges et zone utile de l'annexe sur 9 combinaisons colonnes × échelle, table des couleurs, flèches et annotations, raccourcis, incrément, garde-fou ERAS HTA, pages et historique, migration A3 paysage, niveaux de tuiles à 42° N, indication « ≈ », titre) ; `node js/symboles-supports.test.mjs` (9 essais, dont la comparaison avec la v1.5.4). Les sept autres fichiers d'essais restent verts (trois assertions adaptées : schéma 14, marges de l'annexe).
+
+## v1.6.1 — correctif des boîtes de dialogue
+
+| Réf. | Hypothèse | Fichier |
+|---|---|---|
+| H-323 | **Fermeture différée des boîtes** : l'événement `close` d'un `<dialog>` est envoyé à la tâche suivante. Une boîte fermée puis aussitôt rouverte sur le même élément (liste des pages → « Supprimer » ou « Renommer ») recevait le `close` de la précédente : la confirmation se résolvait « non » avant tout appui, la suppression n'avait jamais lieu. `surFermeture(d, fn)` ignore un `close` reçu alors que la boîte est de nouveau ouverte ; appliqué à `confirmer`, `demander`, la fiche de l'affaire, l'export avec alertes du descriptif, le choix d'import d'un projet et les boîtes d'import d'un fond. Essai : `node js/dialogues.test.mjs` (échoue avec l'ancien code). | `ui/dialogues.js`, `ui/projets.js`, `ui/descriptif.js`, `ui/gestionnaire.js`, `ui/plans.js` |

@@ -12,7 +12,7 @@
  */
 import { etat, sur, notifier, peutModifier, signalerLectureSeule } from '../etat.js';
 import { CHARTE } from '../charte.js';
-import { ouvrirDialogue, confirmer, demander, echapper } from './dialogues.js';
+import { ouvrirDialogue, confirmer, demander, echapper, surFermeture } from './dialogues.js';
 import {
   listePlans, indicePlanCourant, changerPlanId, changerPlanRelatif, renommerPlan, supprimerPlan, repartirPages,
   repartitionPossible, integrerFichier, bascule, indicePlanVise, ajouterPageVierge, deplacerPage, changerFormatPage
@@ -255,7 +255,7 @@ function boite(html, brancher) {
   return new Promise((resolve) => {
     let valeur = null, fini = false;
     const d = ouvrirDialogue('dlg-fond', html);
-    d.addEventListener('close', () => { fini = true; resolve(valeur); }, { once: true });
+    surFermeture(d, () => { fini = true; resolve(valeur); });
     const finir = (v) => { if (fini) return; fini = true; valeur = v; if (d.open) d.close(); else resolve(valeur); };
     brancher(d, finir);
   });

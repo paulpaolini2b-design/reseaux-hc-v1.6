@@ -35,6 +35,21 @@ function armerFermetureExterieure(d) {
   d.addEventListener('pointercancel', () => { depuisLeFond = false; });
 }
 
+/* v1.6.0 (correctif) — Écoute la fermeture de l'ouverture EN COURS d'une boîte, une seule fois.
+ * L'événement `close` d'un <dialog> est envoyé de façon différée (tâche suivante) : quand une boîte est fermée puis
+ * aussitôt rouverte sur le même élément (liste des pages → confirmation de suppression), le `close` de la première
+ * arrivait sur la seconde. Avec `{ once: true }`, la confirmation se résolvait « non » avant tout appui, et le bouton
+ * « Supprimer » n'avait plus d'effet (de même pour « Renommer »). Un `close` reçu alors que la boîte est de nouveau
+ * ouverte est périmé : il est ignoré. */
+export function surFermeture(d, fn) {
+  const ecouteur = () => {
+    if (d.open) return;   // close périmé d'une ouverture précédente
+    d.removeEventListener('close', ecouteur);
+    fn();
+  };
+  d.addEventListener('close', ecouteur);
+}
+
 export function fermerDialogue(id) {
   const d = document.getElementById(id);
   if (d && d.open) d.close();
@@ -52,7 +67,7 @@ export function confirmer(message, { ok = 'Confirmer', annuler = 'Annuler', dang
         </div>
       </form>`);
     d.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', () => { resolve(b.dataset.r === 'oui'); d.close(); }));
-    d.addEventListener('close', () => resolve(false), { once: true });
+    surFermeture(d, () => resolve(false));
   });
 }
 
@@ -77,7 +92,7 @@ export function demander(titre, champs, { ok = 'Valider' } = {}) {
       resolu = true; resolve(res); d.close();
     });
     d.querySelector('[data-r="non"]').addEventListener('click', () => d.close());
-    d.addEventListener('close', () => { if (!resolu) resolve(null); }, { once: true });
+    surFermeture(d, () => { if (!resolu) resolve(null); });
     const premier = form.querySelector('input'); if (premier) setTimeout(() => premier.focus(), 50);
   });
 }

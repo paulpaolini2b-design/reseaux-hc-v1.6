@@ -17,7 +17,7 @@ import { exporterPng } from '../export-png.js';
 import { contexteCourant, contextesProjetOuvert, chargerContexteExport, reserverExport, libererExport } from '../contexte-export.js';
 import { aujourdhui } from '../modele.js';
 import { analyserGps, formaterGps, lienGoogleMaps } from '../descriptif.js';
-import { ouvrirDialogue, fermerDialogue, demander, echapper } from './dialogues.js';
+import { ouvrirDialogue, fermerDialogue, demander, echapper, surFermeture } from './dialogues.js';
 import { CHARTE, TYPES_AFFAIRE } from '../charte.js';
 import { definirEchellePlan } from './calques.js';
 import { ouvrirGestionnaire } from './gestionnaire.js';
@@ -179,7 +179,7 @@ export async function ouvrirFormulaireInfos({ projet = null, avantCreation = nul
       e.preventDefault();
       if (i === liste.length - 1) valider(); else liste[i + 1].focus();
     });
-    d.addEventListener('close', () => { if (!resolu) resolve(null); }, { once: true });
+    surFermeture(d, () => { if (!resolu) resolve(null); });
     setTimeout(() => champ(creation || !v.commune ? (v.nom ? 'commune' : 'nom') : 'nom').focus(), 50);
   });
 }

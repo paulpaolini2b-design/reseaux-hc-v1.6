@@ -9,7 +9,7 @@ import { etat, sur, notifier, notifierAnnulable } from '../etat.js';
 import { bd } from '../bd.js';
 import * as P from '../projet.js';
 import { CHARTE, TYPES_AFFAIRE, LIBELLES_STATUTS } from '../charte.js';
-import { ouvrirDialogue, confirmer, echapper } from './dialogues.js';
+import { ouvrirDialogue, confirmer, echapper, surFermeture } from './dialogues.js';
 import { ouvrirFormulaireInfos, ouvrirFenetreExport, formaterDateHeure } from './projets.js';
 
 const ONGLETS = ['en_cours', 'termine', 'archive', 'corbeille'];
@@ -458,7 +458,7 @@ function choisirModeImport({ projet, existant }) {
       </form>`);
     let r = null;
     d.querySelectorAll('[data-r]').forEach((b) => b.addEventListener('click', () => { r = b.dataset.r === 'non' ? null : b.dataset.r; d.close(); }));
-    d.addEventListener('close', () => resolve(r), { once: true });
+    surFermeture(d, () => resolve(r));
   });
 }
 

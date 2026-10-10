@@ -13,7 +13,7 @@ import { bd } from '../bd.js';
 import { valider, annuler, retablir } from '../historique.js';
 import * as DS from '../descriptif.js';
 import { miseEnPage, depassePage } from '../descriptif-rendu.js';
-import { echapper, confirmer, ouvrirDialogue } from './dialogues.js';
+import { echapper, confirmer, ouvrirDialogue, surFermeture } from './dialogues.js';
 import { ouvrirSelecteurCouleur } from './selecteur-couleur.js';
 import { vue, appliquer } from '../vue.js';
 import { pointsFourreau } from '../symboles.js';
@@ -755,6 +755,6 @@ export function confirmerAlertesExport(plans, { planOuvert = true } = {}) {
       if (planOuvert) corrigerEntree(liste[0].plan.id, liste[0].entree.id);
       else notifier('Ouvrez le projet pour corriger le descriptif', 3000);
     }));
-    d.addEventListener('close', () => { if (!resolu) resolve(false); }, { once: true });
+    surFermeture(d, () => { if (!resolu) resolve(false); });
   });
 }

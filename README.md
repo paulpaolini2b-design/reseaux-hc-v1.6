@@ -1,4 +1,4 @@
-# Réseaux HC — tracé de réseaux BT/HTA sur tablette (lot 1, v1.6.0)
+# Réseaux HC — tracé de réseaux BT/HTA sur tablette (lot 1, v1.6.1)
 
 Application web progressive (PWA) hors ligne pour tracer, symboliser et annoter des réseaux électriques HTA/BT sur fond de plan (PDF, image, photo), sur tablette Android au stylet et au doigt. Aucun serveur, aucune dépendance en ligne : tout est stocké sur la tablette (IndexedDB).
 
@@ -25,7 +25,7 @@ L'application est un dossier de fichiers statiques. Le seul prérequis est **HTT
 2. Vérifier que les fichiers `.mjs` sont servis avec le type MIME `text/javascript` et les `.wasm` avec `application/wasm` (GitHub Pages, nginx et Apache récents le font par défaut).
 3. Ouvrir `https://…/reseaux-hc/index.html` une première fois **avec** connexion : le service worker met en cache les 81 ressources (≈ 8,3 Mo). L'application est ensuite utilisable sans réseau.
 
-Mise à jour : après avoir remplacé les fichiers, incrémenter `VERSION` dans `sw.js` (livraison courante : `reseaux-hc-v1.6.0`). À la prochaine ouverture connectée, la tablette télécharge la nouvelle version et affiche « Nouvelle version installée : relancez l'application ».
+Mise à jour : après avoir remplacé les fichiers, incrémenter `VERSION` dans `sw.js` (livraison courante : `reseaux-hc-v1.6.1`). À la prochaine ouverture connectée, la tablette télécharge la nouvelle version et affiche « Nouvelle version installée : relancez l'application ».
 
 Essai local : `python3 -m http.server 8000` dans le dossier, puis `http://localhost:8000/`.
 
@@ -274,6 +274,10 @@ Fichiers ajoutés : `js/descriptif.js` (génération, mise à jour), `js/descrip
 8. **Schéma 13** (H-301) : un projet v1.5.0 s'ouvre sans changement d'aspect ; une v1.5.0 refuse un .json v1.5.1 — ne plus utiliser l'adresse de la v1.5.0.
 
 Fichier ajouté : `js/v151.test.mjs`. Essais : `node js/v151.test.mjs` (10 essais). Détail des décisions : `HYPOTHESES.md`, H-293 à H-301.
+
+## Correctif v1.6.1 — suppression et renommage d'une page
+
+« Supprimer » et « Renommer » dans la liste des pages restaient sans effet : la liste se fermait, la confirmation (ou la saisie du nom) s'ouvrait sur la même boîte, et l'événement de fermeture de la liste, envoyé en différé par le navigateur, répondait « non » à sa place. Les boîtes ignorent désormais une fermeture périmée (H-323). Défaut présent depuis la v1.4.5 ; il touchait aussi, dans les mêmes conditions, la fiche de l'affaire, l'export avec alertes du descriptif et le choix d'import d'un projet.
 
 ## Nouveautés de la v1.6.0 — gras, annexe, couleurs de texte, flèches, raccourcis, pages, plan de situation
 
